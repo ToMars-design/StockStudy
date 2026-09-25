@@ -1,0 +1,23 @@
+# Keep pinned versions current. Updates are grouped, so each ecosystem opens at most one
+# pull request a month, and a release must be a week old before it is proposed: most
+# malicious package releases are caught and yanked within days.
+version: 2
+updates:
+  - package-ecosystem: uv
+    directory: /
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
+    groups:
+      python:
+        patterns: ["*"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns: ["*"]
