@@ -1,0 +1,15 @@
+ticker,sleeve,target_weight,account_pref,role
+BRK.B,quality,0.10,taxable,Buffett proxy; no dividend so ideal for taxable; earns ~5% on its cash pile
+MSFT,quality,0.08,taxable,Enterprise AI distribution + cloud; de-rated vs semis
+GOOGL,quality,0.07,taxable,Cheapest megacap on clean (F2) earnings; search + cloud + TPUs
+V,quality,0.07,taxable,Payments toll road; watch agentic-commerce disintermediation
+KO,quality,0.07,roth,Requested Buffett staple; expensive now so accumulate slowly
+CB,quality,0.06,roth,Berkshire-owned insurer; 12x earnings; float reinvests at 5%
+AXP,quality,0.05,roth,Berkshire holding; 17x after -18% YTD; credit-cycle risk
+MCO,quality,0.05,taxable,Berkshire holding; ratings duopoly; debt issuance tailwind at high rates
+CVX,quality,0.05,roth,Oil-shock hedge and Berkshire holding; offsets the portfolio's main macro risk
+NVDA,growth,0.10,roth,AI compute monopoly; 14.7x next-year EPS if estimates hold
+TSM,growth,0.09,roth,Sole leading-edge foundry; PEG ~1; Taiwan tail risk
+AMZN,growth,0.08,roth,AWS + retail; AI beneficiary even if capex slows
+AVGO,growth,0.07,roth,Custom AI silicon (ASICs) + networking
+META,growth,0.06,roth,AI applications layer (Muse); ad cash flows fund capex
