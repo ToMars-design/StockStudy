@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+build/
+dist/
+
+# Tool caches and reports
+.coverage
+.coverage.*
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+coverage.xml
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Market data and derived datasets stay out of git: they are large, often licensed for
+# private use only, and must be reproducible from code plus a recorded snapshot identifier.
+/data/
+*.duckdb
+*.feather
+*.h5
+*.hdf5
+*.parquet
+
+# Secrets and personal configuration
+.env
+.env.*
+!.env.example
+.claude/settings.local.json
+CLAUDE.local.md
+
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/
+Thumbs.db

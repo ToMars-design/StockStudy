@@ -1,0 +1,5 @@
+# Store text with LF endings and check it out with LF on every platform.
+* text=auto eol=lf
+
+# Machine-written: collapsed in pull-request diffs and excluded from language statistics.
+uv.lock linguist-generated=true

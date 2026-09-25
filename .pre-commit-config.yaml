@@ -1,0 +1,56 @@
+# Git hooks that run on every commit; install them with `make install`.
+#
+# All hooks are local and run through `uv run --locked`, so each tool is the version pinned
+# in uv.lock: hooks, `make check` and CI cannot disagree, and no hook needs network access.
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-format
+        name: ruff format
+        entry: uv run --locked ruff format
+        language: system
+        types_or: [python, pyi, jupyter]
+      - id: ruff-check
+        name: ruff check
+        entry: uv run --locked ruff check --fix
+        language: system
+        types_or: [python, pyi, jupyter]
+      - id: nbstripout
+        name: strip notebook outputs
+        entry: uv run --locked nbstripout
+        language: system
+        types: [jupyter]
+      - id: check-added-large-files
+        name: block large files (data does not belong in git)
+        entry: uv run --locked check-added-large-files --maxkb=500
+        language: system
+      - id: detect-private-key
+        name: detect private keys
+        entry: uv run --locked detect-private-key
+        language: system
+        types: [text]
+      - id: check-merge-conflict
+        name: check for merge conflict markers
+        entry: uv run --locked check-merge-conflict
+        language: system
+        types: [text]
+      - id: check-toml
+        name: check TOML syntax
+        entry: uv run --locked check-toml
+        language: system
+        types: [toml]
+      - id: check-yaml
+        name: check YAML syntax
+        entry: uv run --locked check-yaml
+        language: system
+        types: [yaml]
+      - id: end-of-file-fixer
+        name: end files with a newline
+        entry: uv run --locked end-of-file-fixer
+        language: system
+        types: [text]
+      - id: trailing-whitespace
+        name: trim trailing whitespace
+        entry: uv run --locked trailing-whitespace-fixer --markdown-linebreak-ext=md
+        language: system
+        types: [text]
