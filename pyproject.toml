@@ -1,0 +1,109 @@
+[project]
+name = "stockstudy"
+version = "0.1.0"
+description = "Research toolkit for applying AI to equity investing, built around leakage-safe evaluation."
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "MarsWang" }]
+requires-python = ">=3.13"
+classifiers = [
+    # Research code, not a distribution: PyPI rejects uploads carrying this classifier.
+    "Private :: Do Not Upload",
+]
+dependencies = [
+    "numpy>=2.2",
+    "pandas>=3.0",
+]
+
+[project.urls]
+Repository = "https://github.com/ToMars-design/StockStudy"
+
+[build-system]
+requires = ["uv_build>=0.12.19,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "mypy>=2.3",
+    "nbstripout>=0.9",
+    "pandas-stubs>=3.0",
+    "pre-commit>=4.6",
+    "pre-commit-hooks>=6.0",
+    "pytest>=9.1",
+    "pytest-cov>=7.1",
+    "ruff>=0.16",
+]
+
+# --- Formatting and linting -------------------------------------------------
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint]
+select = [
+    "E", "W",  # pycodestyle
+    "F",       # pyflakes
+    "I",       # isort
+    "B",       # bugbear: likely bugs and design problems
+    "UP",      # pyupgrade: modern syntax for the supported Python versions
+    "SIM",     # simplifications
+    "C4",      # comprehensions
+    "RET",     # return statements
+    "PTH",     # pathlib over os.path
+    "PT",      # pytest style
+    "NPY",     # numpy: deprecated APIs and the legacy global RNG
+    "PD",      # pandas-vet
+    "D",       # docstrings (Google convention)
+    "S",       # bandit: hard-coded secrets, unsafe deserialisation, ...
+    "T20",     # no print() in library code
+    "ARG",     # unused arguments
+    "TID",     # tidy imports
+    "RUF",     # ruff-specific
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D", "S101"]
+"**/*.ipynb" = ["D", "T20"]
+
+# --- Type checking ----------------------------------------------------------
+
+[tool.mypy]
+strict = true
+files = ["src", "tests"]
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+
+# --- Tests ------------------------------------------------------------------
+
+[tool.pytest.ini_options]
+testpaths = ["src", "tests"]
+addopts = [
+    "-ra",
+    "--strict-config",
+    "--strict-markers",
+    "--import-mode=importlib",
+    "--doctest-modules",
+]
+doctest_optionflags = ["ELLIPSIS", "NORMALIZE_WHITESPACE", "IGNORE_EXCEPTION_DETAIL"]
+xfail_strict = true
+# pandas signals silent behaviour changes through warnings; treat them as failures.
+filterwarnings = ["error"]
+
+[tool.coverage.run]
+source = ["stockstudy"]
+branch = true
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+skip_covered = true

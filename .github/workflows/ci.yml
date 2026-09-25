@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Lint, type-check and test
+    # A push already covers pull requests from this repository; run pull_request events
+    # only for forks, so each change is checked once.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      UV_LOCKED: "1" # fail, rather than silently re-lock, if uv.lock is out of date
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      # Third-party action, so pinned to a full commit SHA rather than a movable tag.
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+      - name: Install dependencies
+        run: uv sync
+      - name: Lint
+        run: make lint
+      - name: Type-check
+        run: make typecheck
+      - name: Test
+        run: make test
