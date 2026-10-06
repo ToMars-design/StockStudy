@@ -7,8 +7,9 @@ contributors.
 
 StockStudy researches how AI (machine learning and language models) can be applied to
 equity investing. What it produces is **evidence that survives scrutiny**, not impressive
-backtests. It is at the foundation stage: the toolchain, the research standard and the
-look-ahead guard exist; data pipelines, features and models do not yet.
+backtests. It is at an early stage: the toolchain, the research standard, the look-ahead guard and
+point-in-time US fundamentals from SEC EDGAR exist; price data, features and models do not
+yet.
 
 ## Commands
 
@@ -18,6 +19,7 @@ make check                        # everything CI runs; must pass before work is
 make fmt                          # ruff format + safe lint fixes
 uv run pytest tests/test_lookahead.py -k panel   # focused test run
 uv add <pkg>                      # runtime dependency (uv add --dev for tooling)
+uv run python -m stockstudy.edgar AAPL   # record EDGAR facts; needs SEC_USER_AGENT
 ```
 
 Never edit `uv.lock` by hand. Coverage below 90% fails `make test`.
@@ -31,7 +33,17 @@ Never edit `uv.lock` by hand. Coverage below 90% fails `make test`.
   changing research code.
 - `notebooks/` (create when needed): exploration only. Notebooks import from `stockstudy`,
   and a git hook strips their outputs.
-- `data/`: local only and git-ignored. Never commit market data.
+- `data/`: local only and git-ignored. Never commit market data. Raw downloads are kept
+  under `data/raw/`, named by retrieval time and content hash.
+
+## Data
+
+- Fundamentals come from SEC EDGAR through `stockstudy.edgar` and are read through
+  `stockstudy.pit` (`as_of`, `latest_value`). Never use a period's end date as the date
+  it became known.
+- The SEC requires a contact in `SEC_USER_AGENT` ("Name email"). Never hard-code one,
+  and never substitute a made-up address.
+- The SEC's ticker list is current only. Never use it to build a historical universe.
 
 ## Research rules (non-negotiable)
 

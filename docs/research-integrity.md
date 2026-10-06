@@ -59,8 +59,11 @@ describes.
 - Joins: `pd.merge_asof(..., direction="backward")` on the availability timestamp; never
   `"forward"` or `"nearest"`.
 
-**Enforced by** review. Data-loading code documents its availability convention in its
-docstring, and the R1 check covers any data passed through it.
+**Enforced by** `stockstudy.pit`: facts carry an `available_at` date and can only be read
+as of a date, keeping every reported version. SEC EDGAR facts become available the
+business day after filing, because the filing date does not say whether a filing arrived
+before or after the close. Other data-loading code documents its availability convention
+in its docstring, and the R1 check covers any data passed through it.
 
 ### R3. Point-in-time universe
 

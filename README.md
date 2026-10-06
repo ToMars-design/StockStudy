@@ -24,10 +24,10 @@ much of that standard as possible with code.
 
 ## Status
 
-Foundation stage. In place: the toolchain, the research standard, the Claude Code
-configuration that holds AI assistance to that standard, and the first executable guard,
-`assert_no_lookahead`. Data pipelines, features and models come next, and each must meet
-the standard to be merged.
+Early stage. In place: the toolchain, the research standard, the Claude Code configuration
+that holds AI assistance to that standard, the executable look-ahead guard, and
+point-in-time US company fundamentals from SEC EDGAR. Price data, features and models come
+next, and each must meet the standard to be merged.
 
 ## Quick start
 
@@ -70,6 +70,45 @@ LookAheadError: outputs at or before 2024-01-01 changed when the inputs after it
 (negative shifts, full-sample statistics, centred windows, backward fills, left-labelled
 resampling, per-ticker panel leaks) and their causal alternatives.
 
+## Data: point-in-time fundamentals from SEC EDGAR
+
+Every US-listed company files its financial statements with the SEC, which publishes each
+reported figure together with the filing that reported it. StockStudy keeps every version,
+so a figure that was later restated still shows its original value on dates before the
+restatement was filed, as investors saw it then.
+
+The SEC requires automated requests to identify a contact, read here from an environment
+variable:
+
+```bash
+export SEC_USER_AGENT="Your Name you@example.com"
+uv run python -m stockstudy.edgar AAPL MSFT   # downloads and records each company's facts
+```
+
+```python
+import pandas as pd
+
+from stockstudy.edgar import EdgarClient
+from stockstudy.pit import latest_value
+
+client = EdgarClient()  # reads SEC_USER_AGENT
+facts = client.company_facts(client.tickers()["AAPL"])  # or a CIK directly: 320193
+revenue = latest_value(
+    facts,
+    pd.bdate_range("2015-01-01", "2025-12-31"),
+    concept="RevenueFromContractWithCustomerExcludingAssessedTax",
+    period="annual",
+)  # daily, indexed by (date, cik): the latest annual revenue known on each date
+```
+
+A figure filed on day *D* counts as known from the next business day, because the filing
+date does not say whether it arrived before or after the close. Every download is saved
+under `data/raw/edgar/` (git-ignored), named by retrieval time and content hash.
+
+Limits: structured data starts in 2009–2011; companies tag the same item differently
+(revenue alone has several tags); and the SEC's ticker list covers current companies only,
+so it must not be used to build a historical universe.
+
 ## Project layout
 
 ```text
@@ -79,7 +118,9 @@ resampling, per-ticker panel leaks) and their causal alternatives.
 ├── docs/
 │   └── research-integrity.md   The evidence standard every result is held to
 ├── src/stockstudy/             Library code: typed, tested, importable
-│   └── lookahead.py            Executable look-ahead check
+│   ├── lookahead.py            Executable look-ahead check
+│   ├── pit.py                  Point-in-time store: what was known, from when
+│   └── edgar.py                SEC EDGAR client for company fundamentals
 ├── tests/                      pytest suite (doctests in src/ run too)
 ├── Makefile                    The quality gates; CI runs the same targets
 ├── pyproject.toml              Metadata, dependencies and tool configuration
